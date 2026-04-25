@@ -3,11 +3,17 @@ from sqlalchemy import select, func, desc
 from models.journal import JournalEntry
 
 
-async def create_journal_entry(db: AsyncSession, user_id: str,
-                                title: str, content: str) -> JournalEntry:
+async def create_journal_entry(
+    db: AsyncSession,
+    user_id: str,
+    title: str,
+    content: str,
+    plan_id: str | None = None,
+) -> JournalEntry:
     entry = JournalEntry(
         user_id=user_id, title=title, content=content,
         word_count=len(content.split()),
+        plan_id=plan_id,
     )
     db.add(entry)
     await db.commit()
@@ -44,6 +50,17 @@ async def update_journal_entry(db: AsyncSession, entry: JournalEntry,
     await db.commit()
     await db.refresh(entry)
     return entry
+
+
+async def list_plan_journal_entries(
+    db: AsyncSession, user_id: str, plan_id: str
+) -> list[JournalEntry]:
+    result = await db.execute(
+        select(JournalEntry)
+        .where(JournalEntry.user_id == user_id, JournalEntry.plan_id == plan_id)
+        .order_by(desc(JournalEntry.created_at))
+    )
+    return list(result.scalars().all())
 
 
 async def save_ai_insights(db: AsyncSession, entry: JournalEntry,

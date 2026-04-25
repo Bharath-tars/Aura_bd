@@ -6,6 +6,7 @@ from datetime import datetime
 class JournalCreateRequest(BaseModel):
     title: str
     content: str
+    plan_id: Optional[str] = None
 
     @field_validator("title")
     @classmethod
@@ -35,6 +36,7 @@ class AIInsight(BaseModel):
 
 class JournalEntryOut(BaseModel):
     id: str
+    plan_id: Optional[str] = None
     title: str
     content: str
     ai_insights: Optional[list[AIInsight]]
@@ -50,6 +52,7 @@ class JournalEntryOut(BaseModel):
 
 class JournalListItem(BaseModel):
     id: str
+    plan_id: Optional[str] = None
     title: str
     themes: list[str]
     sentiment_score: Optional[float]

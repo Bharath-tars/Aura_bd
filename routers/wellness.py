@@ -7,7 +7,8 @@ from schemas.wellness import (
     WellnessPlanCreateRequest, WellnessPlanUpdateRequest,
     WellnessPlanOut, GeneratePlanRequest,
 )
-from services import wellness_service
+from services import wellness_service, journal_service
+from schemas.journal import JournalListItem
 
 router = APIRouter(prefix="/wellness", tags=["wellness"])
 
@@ -64,6 +65,19 @@ async def delete_plan(
         raise HTTPException(404, "Plan not found")
     await db.delete(plan)
     await db.commit()
+
+
+@router.get("/plans/{plan_id}/journal", response_model=list[JournalListItem])
+async def list_plan_journals(
+    plan_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    plan = await wellness_service.get_plan(db, current_user.id, plan_id)
+    if not plan:
+        raise HTTPException(404, "Plan not found")
+    entries = await journal_service.list_plan_journal_entries(db, current_user.id, plan_id)
+    return [JournalListItem.model_validate(e) for e in entries]
 
 
 @router.post("/generate", response_model=WellnessPlanOut, status_code=201)

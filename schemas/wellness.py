@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -54,3 +54,46 @@ class WellnessPlanOut(BaseModel):
 
 class GeneratePlanRequest(BaseModel):
     focus: Optional[str] = None   # user's free-text goal/focus
+
+
+# ── Plan Tasks ────────────────────────────────────────────────────────────────
+
+class PlanTaskCreateRequest(BaseModel):
+    title: str
+    notes: Optional[str] = None
+    sort_order: int = 0
+
+    @field_validator("title")
+    @classmethod
+    def title_not_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Title cannot be empty")
+        return v.strip()
+
+
+class PlanTaskUpdateRequest(BaseModel):
+    title: Optional[str] = None
+    notes: Optional[str] = None
+    completed: Optional[bool] = None
+    time_logged_min: Optional[int] = None
+
+    @field_validator("time_logged_min")
+    @classmethod
+    def time_non_negative(cls, v: Optional[int]) -> Optional[int]:
+        if v is not None and v < 0:
+            raise ValueError("time_logged_min must be >= 0")
+        return v
+
+
+class PlanTaskOut(BaseModel):
+    id: str
+    plan_id: str
+    title: str
+    notes: Optional[str]
+    completed: bool
+    time_logged_min: int
+    sort_order: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}

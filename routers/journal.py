@@ -19,7 +19,7 @@ async def create_entry(
     db: AsyncSession = Depends(get_db),
 ):
     entry = await journal_service.create_journal_entry(
-        db, current_user.id, body.title, body.content,
+        db, current_user.id, body.title, body.content, body.plan_id,
     )
     return JournalEntryOut.model_validate(entry)
 
