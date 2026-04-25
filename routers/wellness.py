@@ -77,14 +77,15 @@ async def generate_plan(
         result = await run_plan_generation(
             user_id=current_user.id, focus=body.focus, db=db,
         )
+        plan_data = result.get("plan_draft") or {}
         plan = await wellness_service.create_plan(
             db, current_user.id,
-            title=result.get("title", "AI Wellness Plan"),
-            description=result.get("description"),
-            goals=result.get("goals", []),
-            activities=result.get("activities", []),
-            start_date=result.get("start_date"),
-            end_date=result.get("end_date"),
+            title=plan_data.get("title", "AI Wellness Plan"),
+            description=plan_data.get("description", result.get("summary", "")),
+            goals=plan_data.get("goals", []),
+            activities=plan_data.get("activities", []),
+            start_date=plan_data.get("start_date"),
+            end_date=plan_data.get("end_date"),
             ai_generated=True,
         )
         return WellnessPlanOut.model_validate(plan)

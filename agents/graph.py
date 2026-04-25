@@ -39,6 +39,16 @@ logger = logging.getLogger(__name__)
 
 async def semantic_routing_node(state: WellnessState) -> dict:
     """Classify intent using embedding cosine similarity (<50ms, no LLM)."""
+    routing_path = state.get("routing_path", []) + ["semantic_router"]
+
+    # Respect pre-set intent from one-shot helpers (confidence == 1.0)
+    if state.get("intent_confidence", 0.0) >= 1.0 and state.get("intent"):
+        return {
+            "intent": state["intent"],
+            "intent_confidence": state["intent_confidence"],
+            "routing_path": routing_path,
+        }
+
     router = get_router()
     user_message = state["messages"][-1].content if state["messages"] else ""
 
@@ -46,14 +56,14 @@ async def semantic_routing_node(state: WellnessState) -> dict:
         return {
             "intent": "coach",
             "intent_confidence": 0.5,
-            "routing_path": state.get("routing_path", []) + ["semantic_router"],
+            "routing_path": routing_path,
         }
 
     intent, confidence = await router.route(user_message)
     return {
         "intent": intent,
         "intent_confidence": confidence,
-        "routing_path": state.get("routing_path", []) + ["semantic_router"],
+        "routing_path": routing_path,
     }
 
 

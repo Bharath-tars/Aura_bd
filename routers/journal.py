@@ -92,8 +92,9 @@ async def analyze_entry(
     try:
         from ..agents.graph import run_journal_analysis
         result = await run_journal_analysis(
-            user_id=current_user.id, entry_id=entry_id,
-            content=entry.content, db=db,
+            user_id=current_user.id,
+            journal_content=entry.content,
+            db=db,
         )
         updated = await journal_service.save_ai_insights(
             db, entry,

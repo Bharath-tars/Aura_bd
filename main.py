@@ -21,11 +21,14 @@ async def lifespan(app: FastAPI):
             from google import genai as google_genai
             from .agents.semantic_router import SemanticRouter, set_router
 
-            gclient = google_genai.Client(api_key=settings.gemini_api_key)
+            gclient = google_genai.Client(
+                api_key=settings.gemini_api_key,
+                http_options={"api_version": "v1"},
+            )
 
             async def embed(text: str):
                 result = gclient.models.embed_content(
-                    model="models/text-embedding-004",
+                    model="text-embedding-004",
                     contents=text,
                 )
                 return np.array(result.embeddings[0].values, dtype=np.float32)

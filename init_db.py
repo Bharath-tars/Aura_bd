@@ -1,6 +1,7 @@
-﻿"""
+# -*- coding: utf-8 -*-
+"""
 Run once to initialise the database and pre-build semantic router centroids.
-Usage: python init_db.py  (from the backend/ directory)
+Usage: python init_db.py  (from the aura/ root directory)
 """
 import asyncio
 import sys
@@ -15,7 +16,7 @@ from backend.models import User, MoodEntry, JournalEntry, WellnessPlan, ChatSess
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    print("âœ“ Database tables created")
+    print("[OK] Database tables created")
 
 
 async def build_centroids():
@@ -27,31 +28,33 @@ async def build_centroids():
 
         settings = get_settings()
         if not settings.gemini_api_key:
-            print("âš   GEMINI_API_KEY not set â€” skipping centroid build")
+            print("[WARN] GEMINI_API_KEY not set -- skipping centroid build")
             return
 
-        gclient = google_genai.Client(api_key=settings.gemini_api_key)
+        gclient = google_genai.Client(
+            api_key=settings.gemini_api_key,
+            http_options={"api_version": "v1"},
+        )
 
         async def embed(text: str):
             import numpy as np
-            result = gclient.models.embed_content(model="models/text-embedding-004", contents=text)
+            result = gclient.models.embed_content(model="text-embedding-004", contents=text)
             return np.array(result.embeddings[0].values, dtype=np.float32)
 
         router = SemanticRouter(embedding_fn=embed)
         await router.build_centroids()
         router.save_centroids("centroids.npy")
-        print("âœ“ Semantic router centroids built and saved")
+        print("[OK] Semantic router centroids built and saved")
     except Exception as e:
-        print(f"âš   Centroid build skipped: {e}")
+        print(f"[WARN] Centroid build skipped: {e}")
 
 
 async def main():
     print("Initialising Aura database...")
     await create_tables()
     await build_centroids()
-    print("\nâœ“ Aura is ready. Run: uvicorn main:app --reload --port 8000")
+    print("\n[OK] Aura is ready. Run: python -m uvicorn backend.main:app --reload --port 8000")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
-
