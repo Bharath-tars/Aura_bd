@@ -22,8 +22,9 @@ python-jose[cryptography]
 passlib[bcrypt]
 
 # Config & validation
-pydantic
+pydantic[email]
 pydantic-settings
+email-validator
 
 # HTTP client
 httpx
