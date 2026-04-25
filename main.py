@@ -13,23 +13,22 @@ async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    # Build semantic router centroids if not cached
+    # Build semantic router centroids (uses google-genai SDK)
     settings = get_settings()
     if settings.gemini_api_key:
         try:
             import numpy as np
-            import google.generativeai as genai
-            from .agents.semantic_router import SemanticRouter
+            from google import genai as google_genai
+            from .agents.semantic_router import SemanticRouter, set_router
 
-            genai.configure(api_key=settings.gemini_api_key)
+            gclient = google_genai.Client(api_key=settings.gemini_api_key)
 
             async def embed(text: str):
-                result = genai.embed_content(
+                result = gclient.models.embed_content(
                     model="models/text-embedding-004",
-                    content=text,
-                    task_type="SEMANTIC_SIMILARITY",
+                    contents=text,
                 )
-                return np.array(result["embedding"], dtype=np.float32)
+                return np.array(result.embeddings[0].values, dtype=np.float32)
 
             router_instance = SemanticRouter(embedding_fn=embed)
             try:
@@ -39,6 +38,7 @@ async def lifespan(app: FastAPI):
                 router_instance.save_centroids("centroids.npy")
 
             app.state.semantic_router = router_instance
+            set_router(router_instance)
         except Exception as e:
             print(f"Warning: semantic router not initialised: {e}")
 
@@ -48,7 +48,6 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    settings = get_settings()
     app = FastAPI(
         title="Aura — AI Wellness Platform",
         description="Multi-agent AI health and mental wellness companion",

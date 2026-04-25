@@ -1,4 +1,4 @@
-"""
+﻿"""
 Run once to initialise the database and pre-build semantic router centroids.
 Usage: python init_db.py  (from the backend/ directory)
 """
@@ -15,7 +15,7 @@ from backend.models import User, MoodEntry, JournalEntry, WellnessPlan, ChatSess
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    print("✓ Database tables created")
+    print("âœ“ Database tables created")
 
 
 async def build_centroids():
@@ -23,38 +23,35 @@ async def build_centroids():
     try:
         from backend.agents.semantic_router import SemanticRouter
         from backend.config import get_settings
-        import google.generativeai as genai
+        from google import genai as google_genai
 
         settings = get_settings()
         if not settings.gemini_api_key:
-            print("⚠  GEMINI_API_KEY not set — skipping centroid build")
+            print("âš   GEMINI_API_KEY not set â€” skipping centroid build")
             return
 
-        genai.configure(api_key=settings.gemini_api_key)
+        gclient = google_genai.Client(api_key=settings.gemini_api_key)
 
         async def embed(text: str):
             import numpy as np
-            result = genai.embed_content(
-                model="models/text-embedding-004",
-                content=text,
-                task_type="SEMANTIC_SIMILARITY",
-            )
-            return np.array(result["embedding"], dtype=np.float32)
+            result = gclient.models.embed_content(model="models/text-embedding-004", contents=text)
+            return np.array(result.embeddings[0].values, dtype=np.float32)
 
         router = SemanticRouter(embedding_fn=embed)
         await router.build_centroids()
         router.save_centroids("centroids.npy")
-        print("✓ Semantic router centroids built and saved")
+        print("âœ“ Semantic router centroids built and saved")
     except Exception as e:
-        print(f"⚠  Centroid build skipped: {e}")
+        print(f"âš   Centroid build skipped: {e}")
 
 
 async def main():
     print("Initialising Aura database...")
     await create_tables()
     await build_centroids()
-    print("\n✓ Aura is ready. Run: uvicorn main:app --reload --port 8000")
+    print("\nâœ“ Aura is ready. Run: uvicorn main:app --reload --port 8000")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+

@@ -106,3 +106,16 @@ class SemanticRouter:
             return "coach", confidence  # safe fallback
 
         return best_intent, confidence
+
+
+# ── Module-level singleton (set by main.py lifespan) ──────────────────────────
+_router_instance: "SemanticRouter | None" = None
+
+
+def get_router() -> "SemanticRouter | None":
+    return _router_instance
+
+
+def set_router(r: "SemanticRouter") -> None:
+    global _router_instance
+    _router_instance = r
