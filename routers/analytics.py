@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..database import get_db
-from ..models.user import User
-from ..utils.auth import get_current_user
-from ..schemas.analytics import DashboardOut
-from ..services.analytics_service import get_dashboard
+from database import get_db
+from models.user import User
+from utils.auth import get_current_user
+from schemas.analytics import DashboardOut
+from services.analytics_service import get_dashboard
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 

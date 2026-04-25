@@ -5,9 +5,9 @@ Never generates user-facing text — only sets crisis_level and crisis_resources
 """
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
-from ..state import WellnessState
-from ..tools import get_crisis_resources
-from ...config import get_settings
+from agents.state import WellnessState
+from agents.tools import get_crisis_resources
+from config import get_settings
 import json
 import re
 

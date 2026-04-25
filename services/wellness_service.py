@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc
-from ..models.wellness import WellnessPlan
+from models.wellness import WellnessPlan
 
 
 async def create_plan(db: AsyncSession, user_id: str, title: str,

@@ -1,9 +1,9 @@
-from .user import User
-from .mood import MoodEntry
-from .journal import JournalEntry
-from .wellness import WellnessPlan
-from .chat import ChatSession, ChatMessage
-from .streak import StreakTracking
+from models.user import User
+from models.mood import MoodEntry
+from models.journal import JournalEntry
+from models.wellness import WellnessPlan
+from models.chat import ChatSession, ChatMessage
+from models.streak import StreakTracking
 
 __all__ = [
     "User", "MoodEntry", "JournalEntry", "WellnessPlan",

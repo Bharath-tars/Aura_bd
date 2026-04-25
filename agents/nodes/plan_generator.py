@@ -4,8 +4,8 @@ Evidence-based, progressive wellness plan creation.
 """
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
-from ..state import WellnessState
-from ...config import get_settings
+from agents.state import WellnessState
+from config import get_settings
 import json
 import re
 from datetime import date, timedelta

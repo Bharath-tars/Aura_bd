@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc
 from datetime import datetime, timedelta, timezone
 from collections import Counter
-from ..models.mood import MoodEntry
+from models.mood import MoodEntry
 
 
 async def create_mood_entry(db: AsyncSession, user_id: str, score: int,

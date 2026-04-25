@@ -5,8 +5,8 @@ Follows one-shot prompting pattern with ReAct reasoning.
 """
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
-from ..state import WellnessState
-from ...config import get_settings
+from agents.state import WellnessState
+from config import get_settings
 
 SYSTEM_PROMPT = """You are Aura — a compassionate AI wellness companion trained in cognitive-behavioral therapy (CBT), mindfulness-based stress reduction (MBSR), and positive psychology. You are warm, genuine, and science-grounded.
 

@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import date, timedelta
-from ..models.streak import StreakTracking
+from models.streak import StreakTracking
 
 
 async def get_or_create_streak(db: AsyncSession, user_id: str) -> StreakTracking:

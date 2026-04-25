@@ -20,15 +20,15 @@ from typing import AsyncGenerator
 from langchain_core.messages import HumanMessage
 from langgraph.graph import END, StateGraph
 
-from .nodes.context_loader import context_loader_node
-from .nodes.crisis_detector import crisis_detector_node
-from .nodes.journal_insights import journal_insights_node
-from .nodes.mood_analyzer import mood_analyzer_node
-from .nodes.plan_generator import plan_generator_node
-from .nodes.response_synthesizer import response_synthesizer_node
-from .nodes.wellness_coach import wellness_coach_node
-from .semantic_router import get_router
-from .state import WellnessState
+from agents.nodes.context_loader import context_loader_node
+from agents.nodes.crisis_detector import crisis_detector_node
+from agents.nodes.journal_insights import journal_insights_node
+from agents.nodes.mood_analyzer import mood_analyzer_node
+from agents.nodes.plan_generator import plan_generator_node
+from agents.nodes.response_synthesizer import response_synthesizer_node
+from agents.nodes.wellness_coach import wellness_coach_node
+from agents.semantic_router import get_router
+from agents.state import WellnessState
 
 logger = logging.getLogger(__name__)
 

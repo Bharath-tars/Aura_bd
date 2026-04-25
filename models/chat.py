@@ -2,7 +2,7 @@ from sqlalchemy import String, Integer, Text, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from uuid import uuid4
-from ..database import Base
+from database import Base
 
 
 class ChatSession(Base):

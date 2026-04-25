@@ -163,8 +163,8 @@ def get_graph() -> WellnessSemanticGraph:
 async def rebuild_graph(db) -> WellnessSemanticGraph:
     """Rebuild graph from SQLite for the current user."""
     from sqlalchemy import select
-    from ..models.mood import MoodEntry
-    from ..models.journal import JournalEntry
+    from models.mood import MoodEntry
+    from models.journal import JournalEntry
 
     graph = WellnessSemanticGraph()
 

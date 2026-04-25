@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc
-from ..models.journal import JournalEntry
+from models.journal import JournalEntry
 
 
 async def create_journal_entry(db: AsyncSession, user_id: str,

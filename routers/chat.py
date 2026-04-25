@@ -3,11 +3,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
-from ..database import get_db
-from ..models.user import User
-from ..models.chat import ChatSession, ChatMessage
-from ..utils.auth import get_current_user
-from ..schemas.chat import ChatSessionOut, ChatMessageOut, SendMessageRequest, CreateSessionRequest
+from database import get_db
+from models.user import User
+from models.chat import ChatSession, ChatMessage
+from utils.auth import get_current_user
+from schemas.chat import ChatSessionOut, ChatMessageOut, SendMessageRequest, CreateSessionRequest
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -87,7 +87,7 @@ async def send_message(
         insights = []
 
         try:
-            from ..agents.graph import stream_wellness_response
+            from agents.graph import stream_wellness_response
             async for chunk in stream_wellness_response(
                 user_id=current_user.id,
                 session_id=session_id,

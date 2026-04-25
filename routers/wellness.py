@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..database import get_db
-from ..models.user import User
-from ..utils.auth import get_current_user
-from ..schemas.wellness import (
+from database import get_db
+from models.user import User
+from utils.auth import get_current_user
+from schemas.wellness import (
     WellnessPlanCreateRequest, WellnessPlanUpdateRequest,
     WellnessPlanOut, GeneratePlanRequest,
 )
-from ..services import wellness_service
+from services import wellness_service
 
 router = APIRouter(prefix="/wellness", tags=["wellness"])
 
@@ -73,7 +73,7 @@ async def generate_plan(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        from ..agents.graph import run_plan_generation
+        from agents.graph import run_plan_generation
         result = await run_plan_generation(
             user_id=current_user.id, focus=body.focus, db=db,
         )

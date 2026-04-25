@@ -3,7 +3,7 @@ Response Synthesizer — final node.
 Assembles the final response, injects crisis resources if needed,
 formats insights, and prepares the SSE payload structure.
 """
-from ..state import WellnessState
+from agents.state import WellnessState
 
 
 async def response_synthesizer_node(state: WellnessState) -> dict:

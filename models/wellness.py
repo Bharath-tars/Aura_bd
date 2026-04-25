@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 import enum
 from uuid import uuid4
-from ..database import Base
+from database import Base
 
 
 class PlanStatus(str, enum.Enum):

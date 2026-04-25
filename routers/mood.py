@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..database import get_db
-from ..models.user import User
-from ..utils.auth import get_current_user
-from ..schemas.mood import MoodLogRequest, MoodEntryOut, MoodAnalyticsOut
-from ..services import mood_service, streak_service
+from database import get_db
+from models.user import User
+from utils.auth import get_current_user
+from schemas.mood import MoodLogRequest, MoodEntryOut, MoodAnalyticsOut
+from services import mood_service, streak_service
 
 router = APIRouter(prefix="/mood", tags=["mood"])
 

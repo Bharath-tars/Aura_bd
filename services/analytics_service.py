@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from ..models.mood import MoodEntry
-from ..models.journal import JournalEntry
-from ..models.wellness import WellnessPlan
-from ..models.streak import StreakTracking
-from .mood_service import compute_analytics
+from models.mood import MoodEntry
+from models.journal import JournalEntry
+from models.wellness import WellnessPlan
+from models.streak import StreakTracking
+from services.mood_service import compute_analytics
 
 
 async def get_dashboard(db: AsyncSession, user_id: str) -> dict:

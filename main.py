@@ -2,9 +2,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from .config import get_settings
-from .database import engine, Base
-from .routers import auth, mood, journal, wellness, chat, analytics, streak
+from config import get_settings
+from database import engine, Base
+from routers import auth, mood, journal, wellness, chat, analytics, streak
 
 
 @asynccontextmanager
@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
         try:
             import numpy as np
             from google import genai as google_genai
-            from .agents.semantic_router import SemanticRouter, set_router
+            from agents.semantic_router import SemanticRouter, set_router
 
             gclient = google_genai.Client(
                 api_key=settings.gemini_api_key,

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
-from ..database import get_db
-from ..models.user import User
-from ..utils.auth import get_current_user
-from ..services.streak_service import get_or_create_streak
+from database import get_db
+from models.user import User
+from utils.auth import get_current_user
+from services.streak_service import get_or_create_streak
 
 router = APIRouter(prefix="/streak", tags=["streak"])
 

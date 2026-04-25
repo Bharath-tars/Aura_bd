@@ -4,8 +4,8 @@ Data-driven pattern analysis with empathetic framing.
 """
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
-from ..state import WellnessState
-from ...config import get_settings
+from agents.state import WellnessState
+from config import get_settings
 
 SYSTEM_PROMPT = """You are Aura's mood intelligence engine. You analyze emotional patterns with the rigor of a behavioral data scientist and the communication style of an empathetic coach. Find the non-obvious. Name the pattern clearly. Make it actionable.
 

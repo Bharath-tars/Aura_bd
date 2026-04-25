@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..database import get_db
-from ..models.user import User
-from ..utils.auth import get_current_user
-from ..schemas.journal import (
+from database import get_db
+from models.user import User
+from utils.auth import get_current_user
+from schemas.journal import (
     JournalCreateRequest, JournalUpdateRequest,
     JournalEntryOut, JournalListItem,
 )
-from ..services import journal_service
+from services import journal_service
 
 router = APIRouter(prefix="/journal", tags=["journal"])
 
@@ -90,7 +90,7 @@ async def analyze_entry(
         raise HTTPException(404, "Journal entry not found")
 
     try:
-        from ..agents.graph import run_journal_analysis
+        from agents.graph import run_journal_analysis
         result = await run_journal_analysis(
             user_id=current_user.id,
             journal_content=entry.content,

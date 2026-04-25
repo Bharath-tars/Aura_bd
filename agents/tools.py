@@ -12,9 +12,9 @@ async def get_mood_history(user_id: str, days: int = 14) -> dict:
     from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
     from sqlalchemy import select
     from datetime import datetime, timedelta, timezone
-    from ..models.mood import MoodEntry
-    from ..config import get_settings
-    from ..services.mood_service import compute_analytics
+    from models.mood import MoodEntry
+    from config import get_settings
+    from services.mood_service import compute_analytics
 
     settings = get_settings()
     engine = create_async_engine(settings.database_url)
@@ -46,8 +46,8 @@ async def get_journal_summary(user_id: str, limit: int = 5) -> dict:
     """Fetch recent journal entries with themes and sentiment (not full content)."""
     from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
     from sqlalchemy import select, desc
-    from ..models.journal import JournalEntry
-    from ..config import get_settings
+    from models.journal import JournalEntry
+    from config import get_settings
 
     settings = get_settings()
     engine = create_async_engine(settings.database_url)
@@ -89,8 +89,8 @@ async def get_wellness_context(user_id: str) -> dict:
     """Fetch active wellness plans and goals."""
     from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
     from sqlalchemy import select
-    from ..models.wellness import WellnessPlan
-    from ..config import get_settings
+    from models.wellness import WellnessPlan
+    from config import get_settings
 
     settings = get_settings()
     engine = create_async_engine(settings.database_url)
@@ -111,9 +111,9 @@ async def get_wellness_context(user_id: str) -> dict:
 @tool
 async def get_graph_insights(user_id: str) -> dict:
     """Get semantic graph derived insights: factor impacts, top themes, emotion correlations."""
-    from ..graph_engine.semantic_graph import rebuild_graph
+    from graph_engine.semantic_graph import rebuild_graph
     from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-    from ..config import get_settings
+    from config import get_settings
 
     settings = get_settings()
     engine = create_async_engine(settings.database_url)
