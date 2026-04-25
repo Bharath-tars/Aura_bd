@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select
 from database import get_db
 from models.user import User
 from models.streak import StreakTracking
@@ -12,11 +12,6 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/register", response_model=TokenResponse, status_code=201)
 async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
-    # Enforce single user — only one account allowed
-    count = await db.scalar(select(func.count()).select_from(User))
-    if count and count > 0:
-        raise HTTPException(status_code=409, detail="An account already exists. Use /auth/login.")
-
     # Check uniqueness
     existing = await db.scalar(select(User).where(User.email == body.email))
     if existing:
