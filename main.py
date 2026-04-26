@@ -9,11 +9,31 @@ from models import PlanTask  # noqa: F401 — ensures plan_tasks table is regist
 from models import TherapistSession, TherapistMessage, TherapistMemory  # noqa: F401
 
 
+async def _seed_demo_user() -> None:
+    from sqlalchemy import select
+    from database import AsyncSessionLocal
+    from models.user import User
+    from utils.auth import hash_password
+    async with AsyncSessionLocal() as db:
+        exists = await db.scalar(select(User).where(User.email == "demo@aura.app"))
+        if not exists:
+            db.add(User(
+                username="demo",
+                email="demo@aura.app",
+                hashed_password=hash_password("aura2025"),
+                onboarding_complete=True,
+            ))
+            await db.commit()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: create tables
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+    # Seed demo user (idempotent — skips if already exists)
+    await _seed_demo_user()
 
     # Build semantic router centroids (uses google-genai SDK)
     settings = get_settings()
