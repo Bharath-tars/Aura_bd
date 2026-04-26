@@ -4,7 +4,7 @@ from sqlalchemy import select
 from database import get_db
 from models.user import User
 from models.streak import StreakTracking
-from schemas.auth import RegisterRequest, LoginRequest, TokenResponse, UserOut, CompleteOnboardingRequest
+from schemas.auth import RegisterRequest, LoginRequest, TokenResponse, UserOut, CompleteOnboardingRequest, ProfileUpdateRequest
 from utils.auth import hash_password, verify_password, create_access_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -60,6 +60,19 @@ async def complete_onboarding(
 ):
     current_user.onboarding_complete = True
     current_user.notification_time = body.notification_time
+    await db.commit()
+    await db.refresh(current_user)
+    return UserOut.model_validate(current_user)
+
+
+@router.patch("/profile", response_model=UserOut)
+async def update_profile(
+    body: ProfileUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    for field, value in body.model_dump(exclude_unset=True).items():
+        setattr(current_user, field, value)
     await db.commit()
     await db.refresh(current_user)
     return UserOut.model_validate(current_user)

@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, field_validator
+from typing import Optional
 
 
 class RegisterRequest(BaseModel):
@@ -36,6 +37,8 @@ class UserOut(BaseModel):
     timezone: str
     notification_time: str
     onboarding_complete: bool
+    gender: Optional[str] = None
+    age: Optional[int] = None
 
     model_config = {"from_attributes": True}
 
@@ -48,3 +51,10 @@ class TokenResponse(BaseModel):
 
 class CompleteOnboardingRequest(BaseModel):
     notification_time: str = "09:00"
+
+
+class ProfileUpdateRequest(BaseModel):
+    gender: Optional[str] = None
+    age: Optional[int] = None
+    timezone: Optional[str] = None
+    notification_time: Optional[str] = None

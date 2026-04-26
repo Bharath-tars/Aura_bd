@@ -30,6 +30,21 @@ class MoodEntryOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class MoodUpdateRequest(BaseModel):
+    score: Optional[int] = None
+    energy_level: Optional[int] = None
+    emotions: Optional[list[str]] = None
+    factors: Optional[list[str]] = None
+    notes: Optional[str] = None
+
+    @field_validator("score", "energy_level", mode="before")
+    @classmethod
+    def check_range(cls, v):
+        if v is not None and not (1 <= v <= 10):
+            raise ValueError("Score must be between 1 and 10")
+        return v
+
+
 class MoodAnalyticsOut(BaseModel):
     total_entries: int
     avg_score: float

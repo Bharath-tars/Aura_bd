@@ -4,8 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from config import get_settings
 from database import engine, Base
-from routers import auth, mood, journal, wellness, chat, analytics, streak, tasks
+from routers import auth, mood, journal, wellness, chat, analytics, streak, tasks, therapist
 from models import PlanTask  # noqa: F401 — ensures plan_tasks table is registered
+from models import TherapistSession, TherapistMessage, TherapistMemory  # noqa: F401
 
 
 @asynccontextmanager
@@ -76,6 +77,7 @@ def create_app() -> FastAPI:
     app.include_router(analytics.router, prefix=prefix)
     app.include_router(streak.router, prefix=prefix)
     app.include_router(tasks.router, prefix=prefix)
+    app.include_router(therapist.router, prefix=prefix)
 
     @app.get("/health")
     async def health():

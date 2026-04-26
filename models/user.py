@@ -1,4 +1,4 @@
-from sqlalchemy import String, Boolean, DateTime
+from sqlalchemy import String, Boolean, DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from uuid import uuid4
@@ -15,6 +15,8 @@ class User(Base):
     timezone: Mapped[str] = mapped_column(String(50), default="UTC")
     notification_time: Mapped[str] = mapped_column(String(10), default="09:00")
     onboarding_complete: Mapped[bool] = mapped_column(Boolean, default=False)
+    gender: Mapped[str] = mapped_column(String(20), nullable=True)
+    age: Mapped[int] = mapped_column(Integer, nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

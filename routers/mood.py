@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from models.user import User
 from utils.auth import get_current_user
-from schemas.mood import MoodLogRequest, MoodEntryOut, MoodAnalyticsOut
+from schemas.mood import MoodLogRequest, MoodUpdateRequest, MoodEntryOut, MoodAnalyticsOut
 from services import mood_service, streak_service
 
 router = APIRouter(prefix="/mood", tags=["mood"])
@@ -58,6 +58,21 @@ async def get_mood(
     if not entry:
         raise HTTPException(404, "Mood entry not found")
     return MoodEntryOut.model_validate(entry)
+
+
+@router.patch("/{entry_id}", response_model=MoodEntryOut)
+async def update_mood(
+    entry_id: str,
+    body: MoodUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    entry = await mood_service.get_mood_entry(db, current_user.id, entry_id)
+    if not entry:
+        raise HTTPException(404, "Mood entry not found")
+    return MoodEntryOut.model_validate(
+        await mood_service.update_mood_entry(db, entry, body.model_dump(exclude_unset=True))
+    )
 
 
 @router.delete("/{entry_id}", status_code=204)

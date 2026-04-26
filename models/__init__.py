@@ -5,8 +5,10 @@ from models.wellness import WellnessPlan
 from models.chat import ChatSession, ChatMessage
 from models.streak import StreakTracking
 from models.plan_task import PlanTask
+from models.therapist import TherapistSession, TherapistMessage, TherapistMemory
 
 __all__ = [
     "User", "MoodEntry", "JournalEntry", "WellnessPlan",
     "ChatSession", "ChatMessage", "StreakTracking", "PlanTask",
+    "TherapistSession", "TherapistMessage", "TherapistMemory",
 ]

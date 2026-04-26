@@ -119,6 +119,13 @@ async def send_message(
             )
             db.add(assistant_msg)
 
+        # Auto-name session from first user message
+        if session.title == "New conversation":
+            first_words = " ".join(body.content.split()[:6])
+            if first_words:
+                session.title = first_words[:60]
+                await db.commit()
+
         yield f"data: {json.dumps({'type': 'done', 'message_id': str(assistant_msg.id)})}\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")

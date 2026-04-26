@@ -30,6 +30,16 @@ async def list_mood_entries(db: AsyncSession, user_id: str,
     return result.scalars().all(), total or 0
 
 
+async def update_mood_entry(db: AsyncSession, entry: MoodEntry, updates: dict) -> MoodEntry:
+    for field, value in updates.items():
+        if hasattr(entry, field):
+            setattr(entry, field, value)
+    await db.flush()
+    await db.commit()
+    await db.refresh(entry)
+    return entry
+
+
 async def get_mood_entry(db: AsyncSession, user_id: str, entry_id: str) -> MoodEntry | None:
     return await db.scalar(
         select(MoodEntry).where(MoodEntry.user_id == user_id, MoodEntry.id == entry_id)
